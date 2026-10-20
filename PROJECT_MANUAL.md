@@ -41,6 +41,11 @@
 * **ตารางเวลาโพสต์คลิป (รันฟรีบน GitHub Cloud โดยไม่ต้องเปิดคอมพิวเตอร์)**:
   * 🌅 **รอบเช้า**: **11:00 น.** เวลาไทย (04:00 UTC)
   * 🌆 **รอบเย็น**: **19:00 น.** เวลาไทย (12:00 UTC)
+* **กลยุทธ์คอนเทนต์อัจฉริยะ (70/30 Angle Rotation Strategy)**:
+  * 💰 **70% Focus**: เน้น 3 ตัวทำเงินหลัก (ElevenLabs, Gamma, Descript) เพื่อส่งคนเข้า Linktree รับค่าคอมมิชชัน
+  * 🚀 **30% Viral Boosters**: สลับ AI ตัวท็อปในกระแสโลก (Perplexity, Runway, HeyGen, Leonardo) เพื่อดึงยอดวิวหลักแสนเข้าช่อง
+  * 📐 **Angle Rotation**: สลับ 4 มุมมองการเล่า (Time-Saver, Hollywood Creator, Secret Cheat Code, Future Shock) เพื่อไม่ให้สคริปต์ซ้ำซาก ป้องกันการโดนแบนสแปม 100%
+  * 🎨 **Visual Themes**: สลับสีธีมกราฟิกอัตโนมัติ (Cyber Cyan, Neon Purple, Matrix Emerald, Sunset Gold) ให้คลิปดูพรีเมียมตลอดเวลา
 * **กลไกการทำงานในแต่ละรอบ**:
   1. `gemini_brain.py`: สุ่มเครื่องมือ AI ตัวใหม่ เขียนสคริปต์ภาษาอังกฤษแบบ Hook -> Features -> Call-to-Action และบันทึกประวัติลง `history.json` ไม่ให้ซ้ำ
   2. `voice_engine.py`: เจนเสียงพากย์ฝรั่งคมชัดด้วย `edge-tts` (เสียง ChristopherNeural) พร้อมสร้างไฟล์ซับไตเติล `.ass`

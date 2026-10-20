@@ -1,6 +1,47 @@
+import random
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 from src.config import VIDEO_WIDTH, VIDEO_HEIGHT
+
+# Dynamic color themes for visual variety (Anti-repetition)
+COLOR_THEMES = [
+    {
+        "name": "CYBER_CYAN",
+        "bg_top": (8, 12, 24),
+        "bg_bot": (18, 30, 56),
+        "card_fill": (14, 22, 42),
+        "card_outline": (0, 240, 255),
+        "accent": (0, 240, 255),
+        "badge_hook": (255, 30, 86)
+    },
+    {
+        "name": "NEON_PURPLE",
+        "bg_top": (14, 8, 26),
+        "bg_bot": (36, 16, 62),
+        "card_fill": (24, 14, 42),
+        "card_outline": (195, 75, 255),
+        "accent": (215, 115, 255),
+        "badge_hook": (255, 45, 130)
+    },
+    {
+        "name": "MATRIX_EMERALD",
+        "bg_top": (6, 18, 14),
+        "bg_bot": (12, 40, 30),
+        "card_fill": (14, 32, 24),
+        "card_outline": (0, 235, 140),
+        "accent": (0, 255, 175),
+        "badge_hook": (255, 60, 60)
+    },
+    {
+        "name": "SUNSET_GOLD",
+        "bg_top": (18, 12, 8),
+        "bg_bot": (46, 26, 16),
+        "card_fill": (32, 20, 14),
+        "card_outline": (255, 175, 35),
+        "accent": (255, 210, 50),
+        "badge_hook": (255, 40, 85)
+    }
+]
 
 def get_font(size: int, bold: bool = False):
     """Load system font across Windows and Linux (GitHub Actions) with fallback"""
@@ -30,7 +71,6 @@ def create_gradient_background(width: int, height: int, top_color=(10, 14, 26), 
     top_r, top_g, top_b = top_color
     bot_r, bot_g, bot_b = bottom_color
     
-    # Simple line-by-line interpolation
     draw = ImageDraw.Draw(base)
     for y in range(height):
         ratio = y / float(height)
@@ -75,7 +115,10 @@ def generate_scene_images(content: dict, temp_dir: Path) -> list[Path]:
     temp_dir.mkdir(parents=True, exist_ok=True)
     images = []
     
-    # Fonts
+    # Pick a random dynamic color theme for this run
+    theme = random.choice(COLOR_THEMES)
+    print(f"🎨 Visual Theme Applied: {theme['name']}")
+    
     font_badge = get_font(34, bold=True)
     font_title_large = get_font(72, bold=True)
     font_heading = get_font(56, bold=True)
@@ -91,14 +134,11 @@ def generate_scene_images(content: dict, temp_dir: Path) -> list[Path]:
     # -------------------------------------------------------------
     # SCENE 1: HOOK (Attention Grabber)
     # -------------------------------------------------------------
-    img1 = create_gradient_background(VIDEO_WIDTH, VIDEO_HEIGHT, (8, 10, 20), (25, 15, 35))
+    img1 = create_gradient_background(VIDEO_WIDTH, VIDEO_HEIGHT, theme["bg_top"], theme["bg_bot"])
     draw1 = ImageDraw.Draw(img1)
     
-    # Top Warning Badge
-    draw_pill_badge(draw1, (240, 260, 840, 340), "[ SECRET AI HACK ]", font_badge, fill=(255, 30, 86))
-    
-    # Hook Card
-    draw_rounded_card(draw1, (80, 420, 1000, 1100), fill=(16, 20, 36), outline=(255, 75, 110), radius=35, border_width=5)
+    draw_pill_badge(draw1, (240, 260, 840, 340), "[ SECRET AI HACK ]", font_badge, fill=theme["badge_hook"])
+    draw_rounded_card(draw1, (80, 420, 1000, 1100), fill=theme["card_fill"], outline=theme["accent"], radius=35, border_width=5)
     
     hook_lines = wrap_text(content.get("hook", "Stop wasting your time doing things manually!"), font_heading, 800, draw1)
     y_text = 490
@@ -108,7 +148,6 @@ def generate_scene_images(content: dict, temp_dir: Path) -> list[Path]:
         draw1.text(((VIDEO_WIDTH - lw) / 2, y_text), line, fill=(255, 255, 255), font=font_heading)
         y_text += 75
         
-    # Bottom tease inside card
     draw_pill_badge(draw1, (290, 940, 790, 1030), "DON'T MISS THIS >>", font_badge, fill=(255, 184, 0), text_color=(0, 0, 0))
     
     path1 = temp_dir / "scene_01_hook.png"
@@ -118,23 +157,19 @@ def generate_scene_images(content: dict, temp_dir: Path) -> list[Path]:
     # -------------------------------------------------------------
     # SCENE 2: TOOL REVEAL
     # -------------------------------------------------------------
-    img2 = create_gradient_background(VIDEO_WIDTH, VIDEO_HEIGHT, (6, 15, 30), (14, 28, 55))
+    img2 = create_gradient_background(VIDEO_WIDTH, VIDEO_HEIGHT, theme["bg_top"], theme["bg_bot"])
     draw2 = ImageDraw.Draw(img2)
     
-    draw_pill_badge(draw2, (260, 260, 820, 340), f"[ {category} ]", font_badge, fill=(0, 190, 255))
+    draw_pill_badge(draw2, (260, 260, 820, 340), f"[ {category} ]", font_badge, fill=theme["accent"], text_color=(0, 0, 0))
+    draw_rounded_card(draw2, (80, 400, 1000, 1120), fill=theme["card_fill"], outline=theme["card_outline"], radius=35, border_width=5)
     
-    draw_rounded_card(draw2, (80, 400, 1000, 1120), fill=(14, 22, 42), outline=(0, 240, 255), radius=35, border_width=5)
-    
-    # Rating (Clean universal text without emoji squares)
     rating_text = f"OVERALL RATING: {rating}"
     bbox_r = draw2.textbbox((0, 0), rating_text, font=font_body_bold)
     draw2.text(((VIDEO_WIDTH - (bbox_r[2] - bbox_r[0])) / 2, 460), rating_text, fill=(255, 215, 0), font=font_body_bold)
     
-    # Giant Tool Name
     bbox_t = draw2.textbbox((0, 0), tool_name, font=font_title_large)
-    draw2.text(((VIDEO_WIDTH - (bbox_t[2] - bbox_t[0])) / 2, 570), tool_name, fill=(0, 240, 255), font=font_title_large)
+    draw2.text(((VIDEO_WIDTH - (bbox_t[2] - bbox_t[0])) / 2, 570), tool_name, fill=theme["accent"], font=font_title_large)
     
-    # Tagline
     tag_lines = wrap_text(tagline, font_heading, 800, draw2)
     y_tag = 720
     for line in tag_lines:
@@ -149,55 +184,64 @@ def generate_scene_images(content: dict, temp_dir: Path) -> list[Path]:
     images.append(path2)
     
     # -------------------------------------------------------------
-    # SCENE 3: THE 3 FEATURES
+    # SCENE 3: 3 KILLER FEATURES
     # -------------------------------------------------------------
-    img3 = create_gradient_background(VIDEO_WIDTH, VIDEO_HEIGHT, (8, 12, 28), (20, 24, 48))
+    img3 = create_gradient_background(VIDEO_WIDTH, VIDEO_HEIGHT, theme["bg_top"], theme["bg_bot"])
     draw3 = ImageDraw.Draw(img3)
     
-    draw_pill_badge(draw3, (280, 240, 800, 320), "[ KEY CAPABILITIES ]", font_badge, fill=(138, 43, 226))
+    draw_pill_badge(draw3, (280, 220, 800, 300), "WHY IT'S A GAME-CHANGER", font_badge, fill=theme["accent"], text_color=(0, 0, 0))
     
-    # Render 3 Feature Cards
-    y_cards = [380, 620, 860]
-    for i, (f_text, y_pos) in enumerate(zip(features[:3], y_cards)):
-        draw_rounded_card(draw3, (90, y_pos, 990, y_pos + 200), fill=(16, 22, 40), outline=(0, 230, 118), radius=25, border_width=3)
-        draw_pill_badge(draw3, (120, y_pos + 30, 240, y_pos + 90), f"#{i+1}", font_badge, fill=(0, 230, 118), text_color=(0, 0, 0))
+    y_feat = 370
+    card_colors = [
+        (theme["card_fill"], theme["card_outline"]),
+        (theme["card_fill"], (255, 200, 0)),
+        (theme["card_fill"], (0, 230, 118))
+    ]
+    badge_prefixes = ["01", "02", "03"]
+    
+    for i, feat in enumerate(features[:3]):
+        fill_c, out_c = card_colors[i % len(card_colors)]
+        draw_rounded_card(draw3, (80, y_feat, 1000, y_feat + 230), fill=fill_c, outline=out_c, radius=28, border_width=4)
         
-        f_lines = wrap_text(f_text, font_body_bold, 680, draw3)
-        y_fl = y_pos + 35
-        for fl in f_lines:
-            draw3.text((270, y_fl), fl, fill=(255, 255, 255), font=font_body_bold)
-            y_fl += 55
+        draw_pill_badge(draw3, (120, y_feat + 30, 240, y_feat + 90), badge_prefixes[i], font_body_bold, fill=out_c, text_color=(0, 0, 0))
+        
+        flines = wrap_text(feat, font_body_bold, 780, draw3)
+        fy = y_feat + 105
+        for fline in flines[:2]:
+            draw3.text((120, fy), fline, fill=(255, 255, 255), font=font_body_bold)
+            fy += 55
             
+        y_feat += 270
+        
     path3 = temp_dir / "scene_03_features.png"
     img3.save(path3)
     images.append(path3)
     
     # -------------------------------------------------------------
-    # SCENE 4: CALL TO ACTION (CTA)
+    # SCENE 4: CTA (Link In Bio)
     # -------------------------------------------------------------
-    img4 = create_gradient_background(VIDEO_WIDTH, VIDEO_HEIGHT, (10, 8, 26), (32, 16, 52))
+    img4 = create_gradient_background(VIDEO_WIDTH, VIDEO_HEIGHT, theme["bg_top"], theme["bg_bot"])
     draw4 = ImageDraw.Draw(img4)
     
-    draw_pill_badge(draw4, (260, 260, 820, 340), "[ GET FREE ACCESS ]", font_badge, fill=(0, 240, 255), text_color=(0, 0, 0))
+    draw_pill_badge(draw4, (260, 320, 820, 400), "WANT TO TRY THIS?", font_badge, fill=(255, 184, 0), text_color=(0, 0, 0))
     
-    draw_rounded_card(draw4, (80, 420, 1000, 1100), fill=(20, 16, 42), outline=(255, 215, 0), radius=35, border_width=5)
+    draw_rounded_card(draw4, (80, 470, 1000, 1180), fill=theme["card_fill"], outline=theme["accent"], radius=40, border_width=6)
     
-    cta_header = f"TRY {tool_name} NOW"
-    bbox_ch = draw4.textbbox((0, 0), cta_header, font=font_title_large)
-    draw4.text(((VIDEO_WIDTH - (bbox_ch[2] - bbox_ch[0])) / 2, 500), cta_header, fill=(255, 215, 0), font=font_title_large)
+    bbox_cta1 = draw4.textbbox((0, 0), ">> LINK IN BIO <<", font_title_large)
+    draw4.text(((VIDEO_WIDTH - (bbox_cta1[2] - bbox_cta1[0])) / 2, 570), ">> LINK IN BIO <<", fill=theme["accent"], font=font_title_large)
     
-    cta_lines = wrap_text("Click the link in bio to try this tool free and save this video for later!", font_heading, 800, draw4)
-    y_cta = 660
-    for line in cta_lines:
-        bbox_l = draw4.textbbox((0, 0), line, font=font_heading)
-        draw4.text(((VIDEO_WIDTH - (bbox_l[2] - bbox_l[0])) / 2, y_cta), line, fill=(240, 240, 240), font=font_heading)
-        y_cta += 75
+    cta_sub = "Click the link in our profile to test this AI completely free!"
+    clines = wrap_text(cta_sub, font_heading, 800, draw4)
+    cy = 730
+    for line in clines:
+        bbox_c = draw4.textbbox((0, 0), line, font=font_heading)
+        draw4.text(((VIDEO_WIDTH - (bbox_c[2] - bbox_c[0])) / 2, cy), line, fill=(240, 240, 240), font=font_heading)
+        cy += 70
         
-    draw_pill_badge(draw4, (180, 940, 900, 1040), ">> LINK IN BIO <<", font_heading, fill=(0, 240, 255), text_color=(0, 0, 0))
+    draw_pill_badge(draw4, (200, 990, 880, 1080), "FOLLOW FOR DAILY AI HACKS", font_badge, fill=(255, 30, 86), text_color=(255, 255, 255))
     
     path4 = temp_dir / "scene_04_cta.png"
     img4.save(path4)
     images.append(path4)
     
-    print(f"4 Scene Images rendered successfully in: {temp_dir}")
     return images

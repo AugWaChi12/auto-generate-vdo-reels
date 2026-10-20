@@ -6,6 +6,57 @@ from src.config import GEMINI_API_KEY, GEMINI_MODEL, DATABASE_FILE, AFFILIATE_BI
 
 HISTORY_FILE = ROOT_DIR / "history.json"
 
+PRIMARY_MONETIZATION_TOOLS = [
+    {
+        "name": "ElevenLabs",
+        "category": "VOICE & AUDIO AI",
+        "rating": "9.9/10",
+        "tagline": "The Most Realistic Voice AI on Earth"
+    },
+    {
+        "name": "Gamma App",
+        "category": "PRESENTATION & DOC AI",
+        "rating": "9.8/10",
+        "tagline": "Build Beautiful Decks in 30s"
+    },
+    {
+        "name": "Descript",
+        "category": "VIDEO & AUDIO EDITOR",
+        "rating": "9.8/10",
+        "tagline": "Edit Video Just Like a Text Doc"
+    }
+]
+
+VIRAL_TRENDING_TOOLS = [
+    {"name": "Perplexity AI", "category": "AI SEARCH ENGINE", "rating": "9.9/10", "tagline": "The AI Search That Beats Google"},
+    {"name": "Notion AI", "category": "PRODUCTIVITY WORKSPACE", "rating": "9.8/10", "tagline": "Your Second Brain On Autopilot"},
+    {"name": "Runway Gen-2", "category": "AI VIDEO GENERATOR", "rating": "9.9/10", "tagline": "Text To Cinematic Video In Seconds"},
+    {"name": "Cursor AI", "category": "AI CODING ASSISTANT", "rating": "9.9/10", "tagline": "The Future of Coding is Here"},
+    {"name": "Midjourney", "category": "HYPER-REALISTIC IMAGES", "rating": "9.9/10", "tagline": "Photorealistic AI Art in Seconds"},
+    {"name": "Suno AI", "category": "FULL SONG GENERATOR", "rating": "9.8/10", "tagline": "Create Full Radio Hit Songs Instantly"},
+    {"name": "Leonardo AI", "category": "STUDIO ASSET GENERATOR", "rating": "9.8/10", "tagline": "Game & Studio Assets in 1-Click"},
+    {"name": "HeyGen", "category": "AI AVATAR VIDEO", "rating": "9.8/10", "tagline": "Create Studio Avatars Without Cameras"}
+]
+
+ANGLES = [
+    {
+        "name": "TIME-CRUNCH / LAZY PRODUCTIVITY",
+        "hook_guide": "Focus on saving 5-10 hours of exhausting manual work. Example: 'Stop wasting 5 hours doing X manually... This secret AI does it in 30 seconds.'"
+    },
+    {
+        "name": "SECRET CREATOR / HOLLYWOOD PRODUCTION HACK",
+        "hook_guide": "Focus on how top YouTubers and studios get million-dollar quality on a zero budget. Example: 'How creators are secretly producing Hollywood-level content without spending a dime.'"
+    },
+    {
+        "name": "THE ILLEGAL CHEAT CODE / UNFAIR ADVANTAGE",
+        "hook_guide": "Frame the tool as an unfair secret weapon that 99% of people have no idea exists. Example: 'This free AI tool feels completely illegal to know, but nobody is talking about it.'"
+    },
+    {
+        "name": "FUTURE SHOCK / TRADITIONAL SOFTWARE IS DEAD",
+        "hook_guide": "Declare traditional manual software obsolete. Example: 'Doing X the old way is officially dead. This free AI tool replaced my entire workflow in 1 click.'"
+    }
+]
+
 def load_history() -> list[str]:
     if HISTORY_FILE.exists():
         try:
@@ -17,127 +68,126 @@ def load_history() -> list[str]:
 
 def save_to_history(tool_name: str):
     history = load_history()
-    if tool_name not in history:
-        history.append(tool_name)
-        with open(HISTORY_FILE, "w", encoding="utf-8") as f:
-            json.dump(history, f, indent=2, ensure_ascii=False)
+    history.append(tool_name)
+    with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+        json.dump(history, f, indent=2, ensure_ascii=False)
 
-def load_catalog():
-    if DATABASE_FILE.exists():
-        with open(DATABASE_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return []
+def select_candidate_tool(tool_hint: str = None) -> tuple[dict, bool]:
+    """
+    70/30 Strategy:
+    - 70% chance: Select from Primary Monetization Tools (ElevenLabs, Gamma, Descript)
+    - 30% chance: Select from Viral Trending Tools (Perplexity, Runway, etc.)
+    """
+    if tool_hint:
+        for t in PRIMARY_MONETIZATION_TOOLS + VIRAL_TRENDING_TOOLS:
+            if t["name"].lower() == tool_hint.lower():
+                return t, True
+        return {"name": tool_hint, "category": "AI SOFTWARE", "rating": "9.8/10", "tagline": "Next-Gen AI Tool"}, False
 
-def get_fallback_content(tool_name: str = None) -> dict:
-    catalog = load_catalog()
-    if not catalog:
-        return {
-            "title": "This AI Tool Feels Illegal To Know... 🤯",
-            "tool_name": "Gamma App",
-            "category": "PRESENTATION AI",
-            "rating": "9.9/10",
-            "tagline": "Build Presentations in 30 Seconds",
-            "hook": "Stop wasting hours on boring PowerPoint slides! This free AI builds entire presentations from a single prompt.",
-            "features": [
-                "Generates 10+ slides in 30 seconds",
-                "Auto-creates visuals, charts and layouts",
-                "Exports directly to PowerPoint and PDF"
-            ],
-            "cta": f"Link to try this free is in the bio! Save this video before your next presentation.",
-            "voice_script": "Stop wasting hours on boring PowerPoint slides! This free AI builds entire presentations from a single prompt. It generates over ten beautifully designed slides in thirty seconds, complete with images and charts. Plus, you can export directly to PowerPoint with one click. Grab the free link in our bio, and save this video for later!",
-            "hashtags": ["#shorts", "#aitools", "#techhacks", "#productivity", "#presentation"]
-        }
-    
-    if tool_name:
-        for item in catalog:
-            if item.get("name", "").lower() == tool_name.lower():
-                selected = item
-                break
-        else:
-            selected = random.choice(catalog)
+    history = load_history()
+    recent_tools = history[-4:] if history else []
+
+    # 70% Primary Monetization, 30% Viral
+    is_primary = random.random() < 0.70
+
+    if is_primary:
+        # Pick a monetization tool that wasn't the immediate last one
+        candidates = [t for t in PRIMARY_MONETIZATION_TOOLS if t["name"] not in recent_tools[:1]]
+        if not candidates:
+            candidates = PRIMARY_MONETIZATION_TOOLS
+        selected = random.choice(candidates)
+        return selected, True
     else:
-        selected = random.choice(catalog)
-        
-    voice_script = f"{selected['hook']} First, {selected['features'][0]}. Second, {selected['features'][1]}. And third, {selected['features'][2]}. {selected['cta']}"
-    
-    return {
-        "title": f"This AI Tool Feels Totally Illegal To Know... 🤯 ({selected['name']})",
-        "tool_name": selected["name"],
-        "category": selected.get("category", "AI SOFTWARE"),
-        "rating": selected.get("rating", "9.8/10"),
-        "tagline": selected.get("tagline", "Next-Gen AI Platform"),
-        "hook": selected["hook"],
-        "features": selected["features"],
-        "cta": selected["cta"],
-        "voice_script": voice_script,
-        "hashtags": selected.get("tags", ["#shorts", "#aitools", "#tech", "#productivity"])
-    }
+        candidates = [t for t in VIRAL_TRENDING_TOOLS if t["name"] not in recent_tools]
+        if not candidates:
+            candidates = VIRAL_TRENDING_TOOLS
+        selected = random.choice(candidates)
+        return selected, False
 
 def generate_short_content(tool_hint: str = None) -> dict:
     """
-    Generate viral Short script via Gemini API.
-    Guarantees non-repeating tools by tracking history.
+    Generate viral Short script via Gemini API using the 70/30 Angle Rotation Strategy.
+    Guarantees dynamic, non-repetitive scripts that comply with YouTube & Meta spam policies.
     """
-    history = load_history()
-    
+    candidate, is_monetization = select_candidate_tool(tool_hint)
+    angle = random.choice(ANGLES)
+
+    tool_name = candidate["name"]
+    category = candidate.get("category", "AI SOFTWARE")
+    rating = candidate.get("rating", "9.8/10")
+    tagline = candidate.get("tagline", "Next-Gen AI Tool")
+
+    print(f"🎯 Target Tool: {tool_name} ({'Primary Monetization' if is_monetization else 'Viral Traffic Booster'})")
+    print(f"📐 Selected Angle: {angle['name']}")
+
     if not GEMINI_API_KEY:
-        print("ℹ️ GEMINI_API_KEY not detected. Using curated high-converting AI database.")
-        content = get_fallback_content(tool_hint)
-        save_to_history(content["tool_name"])
+        print("ℹ️ GEMINI_API_KEY not detected. Using structured fallback.")
+        content = {
+            "title": f"This AI Tool Feels Totally Illegal To Know... 🤯 ({tool_name})",
+            "tool_name": tool_name,
+            "category": category,
+            "rating": rating,
+            "tagline": tagline,
+            "hook": f"Stop wasting hours on manual work! This free AI tool called {tool_name} will 10x your speed.",
+            "features": [
+                f"100% automated {category.lower()} in seconds",
+                "Built for creators, students & professionals",
+                "Completely free to test out today"
+            ],
+            "cta": "Link to try this free is in our bio! Follow @nextgen_ai_hacks for daily secret tech.",
+            "voice_script": f"Stop wasting hours on manual work! This free AI tool called {tool_name} will ten x your speed. First, it automates your workflow in seconds. Second, it is built specifically for creators and professionals. And third, you can try it completely free today. Grab the free link in our bio, and follow NextGen AI Hacks for daily secret tech!",
+            "hashtags": ["#shorts", "#aitools", "#techhacks", "#productivity"]
+        }
+        save_to_history(tool_name)
         return content
-        
+
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}"
-    
-    catalog = load_catalog()
-    catalog_remaining = [t["name"] for t in catalog if t["name"] not in history]
-    if not catalog_remaining:
-        catalog_remaining = [t["name"] for t in catalog]
-        
-    already_done_str = ", ".join(history[-25:]) if history else "None yet"
-    
+
     prompt = f"""
-    You are a viral YouTube Shorts and TikTok content creator specializing in AI Tools.
-    Create a high-retention 35-45 second video script in English reviewing an insane, mind-blowing AI tool.
-    Recommended tool candidate: {tool_hint if tool_hint else random.choice(catalog_remaining)}.
+    You are an elite YouTube Shorts & Facebook Reels creator for tech brand 'NextGen AI Hacks'.
+    Create a high-retention 35-42 second video script in English reviewing: '{tool_name}'.
 
-    STRICT ANTI-REPEAT RULE:
-    DO NOT review any of these tools that were recently featured:
-    [{already_done_str}]
-    Pick a FRESH, trending, or highly useful AI tool across any category (e.g. video creation, audio/music, coding, 3D, writing, productivity, image gen, marketing, automation).
+    CATEGORY: {category}
+    CURRENT EPISODE ANGLE: {angle['name']}
+    HOOK GUIDELINE: {angle['hook_guide']}
 
-    Follow this viral formula:
-    1. 0-3s HOOK: Scroll-stopping, high-curiosity or huge pain-point (e.g. 'Stop wasting 5 hours doing X...').
-    2. 3-25s BODY: 3 mind-blowing features explained in simple, punchy, conversational language.
-    3. 25-35s CTA: Urge the viewer to check the link in the bio to try it free and follow for more.
+    STRICT VIRAL FORMULA:
+    1. 0-3s HOOK: High-energy, curiosity-driven opening sentence following the specified angle.
+    2. 3-25s BODY: 3 mind-blowing, specific practical use-cases / features explained in conversational English. Avoid technical jargon.
+    3. 25-35s CTA: Direct the viewer to the link in bio to try it free and follow for daily secret AI hacks.
+
+    RULES:
+    - Never sound generic. Talk about real-world scenarios (saving time, making money, creating better content).
+    - Total voiceover script MUST be between 70 and 85 words so spoken length is exactly 30-38 seconds.
 
     OUTPUT REQUIREMENT:
-    Return ONLY a valid JSON object (no markdown quotes, no triple backticks) with these exact keys:
+    Return ONLY a valid JSON object (no markdown, no quotes around output) with these exact keys:
     {{
-        "title": "Clickbait yet accurate YouTube Shorts title with 1 emoji",
-        "tool_name": "Exact Name of Tool",
-        "category": "CATEGORY IN 2-3 WORDS (e.g. PRESENTATION AI)",
-        "rating": "9.8/10",
-        "tagline": "Punchy 4-6 word tagline",
-        "hook": "Opening 1-2 sentences",
+        "title": "Clickbait yet accurate Shorts title with 1 emoji",
+        "tool_name": "{tool_name}",
+        "category": "{category}",
+        "rating": "{rating}",
+        "tagline": "{tagline}",
+        "hook": "Opening 1-2 sentences hook",
         "features": [
-            "Short punchy feature 1 (max 8 words)",
-            "Short punchy feature 2 (max 8 words)",
-            "Short punchy feature 3 (max 8 words)"
+            "Feature 1 (max 8 words)",
+            "Feature 2 (max 8 words)",
+            "Feature 3 (max 8 words)"
         ],
         "cta": "Closing call to action directing to link in bio",
-        "voice_script": "Full continuous text for the voiceover to read out loud smoothly. Keep under 80 words so it takes ~30-35 seconds to speak.",
-        "hashtags": ["#shorts", "#aitools", "#productivity", "#tech"]
+        "voice_script": "Full continuous spoken script under 85 words.",
+        "hashtags": ["#shorts", "#aitools", "#techhacks", "#productivity"]
     }}
     """
-    
+
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
         "generationConfig": {
-            "temperature": 0.7,
+            "temperature": 0.8,
             "responseMimeType": "application/json"
         }
     }
-    
+
     try:
         resp = requests.post(url, json=payload, timeout=20)
         if resp.status_code == 200:
@@ -150,17 +200,29 @@ def generate_short_content(tool_hint: str = None) -> dict:
             if raw_text.endswith("```"):
                 raw_text = raw_text[:-3]
             result = json.loads(raw_text.strip())
-            tool_name = result.get('tool_name', 'AI Tool')
             save_to_history(tool_name)
-            print(f"✨ Gemini successfully generated script for: {tool_name}")
+            print(f"✨ Gemini successfully crafted unique script for: {tool_name} [{angle['name']}]")
             return result
         else:
-            print(f"⚠️ Gemini API returned status {resp.status_code}: {resp.text[:150]}")
-            content = get_fallback_content(tool_hint)
-            save_to_history(content["tool_name"])
-            return content
+            print(f"⚠️ Gemini API error {resp.status_code}: {resp.text[:120]}")
     except Exception as e:
-        print(f"⚠️ Gemini API request failed: {e}. Falling back to curated catalog.")
-        content = get_fallback_content(tool_hint)
-        save_to_history(content["tool_name"])
-        return content
+        print(f"⚠️ Gemini request exception: {e}")
+
+    # Fallback
+    save_to_history(tool_name)
+    return {
+        "title": f"Secret AI Hack: {tool_name} 🤯",
+        "tool_name": tool_name,
+        "category": category,
+        "rating": rating,
+        "tagline": tagline,
+        "hook": f"Stop wasting hours on manual tasks. This secret AI tool called {tool_name} changes everything.",
+        "features": [
+            f"Automates {category.lower()} in seconds",
+            "Saves 5+ hours of tedious work",
+            "100% free to test right now"
+        ],
+        "cta": "Check the link in bio to try it free! Follow @nextgen_ai_hacks for more.",
+        "voice_script": f"Stop wasting hours on manual tasks. This secret AI tool called {tool_name} changes everything. First, it automates your workflow in seconds. Second, it saves you over five hours of tedious work every single week. And third, it is completely free to start. Grab the link in our bio right now, and follow NextGen AI Hacks for daily secret tech!",
+        "hashtags": ["#shorts", "#aitools", "#techhacks", "#productivity"]
+    }
