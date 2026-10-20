@@ -1,0 +1,58 @@
+name: Daily AI Shorts Generator
+
+on:
+  schedule:
+    # 04:00 UTC = 11:00 AM Bangkok Time
+    - cron: '0 4 * * *'
+    # 12:00 UTC = 19:00 PM Bangkok Time
+    - cron: '0 12 * * *'
+  workflow_dispatch:
+    inputs:
+      tool:
+        description: 'Specific AI Tool to review (leave blank for auto-pick)'
+        required: false
+        default: ''
+
+jobs:
+  build-and-generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install System Dependencies (FFmpeg & Fonts)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-dejavu-core fonts-liberation
+
+      - name: Install Python Requirements
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Generate AI Short Video
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          AFFILIATE_BIO_URL: ${{ secrets.AFFILIATE_BIO_URL }}
+        run: |
+          python run_local.py "${{ github.event.inputs.tool }}"
+
+      - name: Save Video & Metadata as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-shorts-${{ github.run_id }}
+          path: |
+            output/*.mp4
+            output/*.json
+          retention-days: 30

@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Gamma App",
+    "category": "PRESENTATION AI",
+    "rating": "9.8/10",
+    "tagline": "Build Beautiful Decks in 30 Seconds",
+    "hook": "Stop wasting hours designing PowerPoint slides! This free AI builds entire presentations, documents, and web pages from a single sentence prompt.",
+    "features": [
+      "Generates 10+ branded slides in 30 seconds",
+      "Auto-generates relevant images, charts & layouts",
+      "One-click export to PDF and PowerPoint"
+    ],
+    "cta": "Link to try this free is in the bio! Save this video before you start your next presentation.",
+    "website_url": "https://gamma.app",
+    "tags": ["#gamma #aitools #presentation #productivity #powerpoint #techhacks"]
+  },
+  {
+    "name": "ElevenLabs",
+    "category": "VOICE & AUDIO AI",
+    "rating": "9.9/10",
+    "tagline": "The Most Realistic AI Voices on Earth",
+    "hook": "This voice AI is so realistic, you literally cannot tell if it is a real human or a robot speaking.",
+    "features": [
+      "Clones any voice with just 1 minute of audio",
+      "Over 30 languages with authentic accents & emotion",
+      "Industry standard used by top creators and game studios"
+    ],
+    "cta": "Try cloning your voice for free with the link in bio! Like and subscribe for more insane tools.",
+    "website_url": "https://elevenlabs.io",
+    "tags": ["#elevenlabs #voiceai #aitools #technews #contentcreator #audioai"]
+  },
+  {
+    "name": "Perplexity AI",
+    "category": "SEARCH & RESEARCH AI",
+    "rating": "9.9/10",
+    "tagline": "The AI Search Engine That Beats Google",
+    "hook": "Google is officially outdated. This free AI search engine gives you direct answers with cited sources instead of 50 spammy ad links.",
+    "features": [
+      "Real-time web browsing with verified citations",
+      "Summarizes 20-page research papers in 5 seconds",
+      "Uploads PDFs, spreadsheets & code for instant analysis"
+    ],
+    "cta": "Link to replace your search engine is in the bio! Follow to stay ahead of the AI revolution.",
+    "website_url": "https://perplexity.ai",
+    "tags": ["#perplexity #googlesearch #aitools #research #students #productivity"]
+  },
+  {
+    "name": "Cursor AI",
+    "category": "CODING & DEV AI",
+    "rating": "9.9/10",
+    "tagline": "Build Full Software Without Writing Code",
+    "hook": "You do not need a computer science degree to build software anymore. This AI code editor writes entire web apps for you in plain English.",
+    "features": [
+      "Reads your entire codebase with 2-million token context",
+      "Press Tab to predict whole functions before you type",
+      "Fixes bugs and deploys projects in seconds"
+    ],
+    "cta": "Grab the free download link in our bio! Share this with a developer friend.",
+    "website_url": "https://cursor.com",
+    "tags": ["#cursor #coding #ai #softwareengineer #programming #tech"]
+  },
+  {
+    "name": "Runway Gen-3",
+    "category": "VIDEO GENERATION AI",
+    "rating": "9.7/10",
+    "tagline": "Hollywood Quality AI Video From Text",
+    "hook": "Hollywood is terrified of this tool. You can now generate cinema-grade 4K video clips just by typing what you imagine.",
+    "features": [
+      "Hyper-realistic camera motion and lighting control",
+      "Turn any still photo into an animated movie scene",
+      "Direct scenes with precise motion brush tools"
+    ],
+    "cta": "Link in bio to test it out free! What movie would you create with this?",
+    "website_url": "https://runwayml.com",
+    "tags": ["#runway #runwaygen3 #aivideo #filmmaking #cinematography #ai"]
+  },
+  {
+    "name": "Notion AI",
+    "category": "WORKFLOW & PRODUCTIVITY",
+    "rating": "9.6/10",
+    "tagline": "Your Complete Second Brain Powered by AI",
+    "hook": "If your life feels disorganized and chaotic, this single AI workspace will organize your entire life and business automatically.",
+    "features": [
+      "Instant meeting notes summaries and action items",
+      "Ask anything across all your personal notes & docs",
+      "Auto-fills project tables and tracks daily habits"
+    ],
+    "cta": "Get the free workspace template link in bio! Double tap if you love productivity hacks.",
+    "website_url": "https://notion.so",
+    "tags": ["#notion #notionai #secondbrain #productivity #studyhacks #organization"]
+  },
+  {
+    "name": "Descript",
+    "category": "VIDEO EDITING AI",
+    "rating": "9.7/10",
+    "tagline": "Edit Videos by Editing Text Like a Doc",
+    "hook": "Stop spending 8 hours cutting video filler words! This AI lets you edit your video simply by deleting words in a text document.",
+    "features": [
+      "Auto-detects and deletes all 'ums', 'ahs', and awkward pauses",
+      "AI Eye Contact fixer makes you look directly into camera",
+      "Studio Sound removes all room echo and background noise"
+    ],
+    "cta": "Check the free link in bio! Tag a YouTuber who needs this immediately.",
+    "website_url": "https://descript.com",
+    "tags": ["#descript #videoediting #contentcreator #youtubetips #podcasting #ai"]
+  },
+  {
+    "name": "Suno AI",
+    "category": "MUSIC CREATION AI",
+    "rating": "9.8/10",
+    "tagline": "Create Radio Hit Songs In Any Genre",
+    "hook": "You can now produce a billboard-level song with full vocals, instruments, and mixing in literally 15 seconds.",
+    "features": [
+      "Generates catchy radio vocals in Pop, Hip-Hop, Rock & EDM",
+      "Write your own lyrics or let AI write the story",
+      "Full commercial rights to monetize on Spotify & YouTube"
+    ],
+    "cta": "Link in bio to make your first song! Drop your dream song genre in the comments.",
+    "website_url": "https://suno.com",
+    "tags": ["#suno #sunoai #musicproducer #aimusic #songwriting #musicians"]
+  }
+]
