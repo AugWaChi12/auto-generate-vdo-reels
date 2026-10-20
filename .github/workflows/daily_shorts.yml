@@ -2,6 +2,8 @@ name: Daily AI Shorts Generator
 
 on:
   schedule:
+    # Test Run at 14:31 UTC = 21:31 Bangkok Time
+    - cron: '31 14 * * *'
     # 04:15 UTC = 11:15 AM Bangkok Time (Off-peak minute to prevent GitHub dropping)
     - cron: '15 4 * * *'
     # 12:15 UTC = 19:15 PM Bangkok Time (Off-peak minute to prevent GitHub dropping)
