@@ -109,7 +109,7 @@ def generate_scene_images(content: dict, temp_dir: Path) -> list[Path]:
         y_text += 75
         
     # Bottom tease inside card
-    draw_pill_badge(draw1, (290, 940, 790, 1030), "DON'T MISS THIS ➔", font_badge, fill=(255, 184, 0), text_color=(0, 0, 0))
+    draw_pill_badge(draw1, (290, 940, 790, 1030), "DON'T MISS THIS >>", font_badge, fill=(255, 184, 0), text_color=(0, 0, 0))
     
     path1 = temp_dir / "scene_01_hook.png"
     img1.save(path1)
@@ -193,11 +193,11 @@ def generate_scene_images(content: dict, temp_dir: Path) -> list[Path]:
         draw4.text(((VIDEO_WIDTH - (bbox_l[2] - bbox_l[0])) / 2, y_cta), line, fill=(240, 240, 240), font=font_heading)
         y_cta += 75
         
-    draw_pill_badge(draw4, (180, 940, 900, 1040), "🔗 LINK IN BIO ➔", font_heading, fill=(0, 240, 255), text_color=(0, 0, 0))
+    draw_pill_badge(draw4, (180, 940, 900, 1040), ">> LINK IN BIO <<", font_heading, fill=(0, 240, 255), text_color=(0, 0, 0))
     
     path4 = temp_dir / "scene_04_cta.png"
     img4.save(path4)
     images.append(path4)
     
-    print(f"🎨 4 Scene Images rendered successfully in: {temp_dir}")
+    print(f"4 Scene Images rendered successfully in: {temp_dir}")
     return images
