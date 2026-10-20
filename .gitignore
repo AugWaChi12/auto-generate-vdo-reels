@@ -6,6 +6,12 @@ output/
 !assets/bgm/*.wav
 !assets/bgm/*.mp3
 
+# Credentials & Secrets
+client_secret*.json
+token.json
+*secret*.json
+*.jsonl
+
 # Python
 __pycache__/
 *.py[cod]
