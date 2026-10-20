@@ -2,7 +2,25 @@ import os
 import json
 import random
 import requests
-from src.config import GEMINI_API_KEY, GEMINI_MODEL, DATABASE_FILE, AFFILIATE_BIO_URL
+from src.config import GEMINI_API_KEY, GEMINI_MODEL, DATABASE_FILE, AFFILIATE_BIO_URL, ROOT_DIR
+
+HISTORY_FILE = ROOT_DIR / "history.json"
+
+def load_history() -> list[str]:
+    if HISTORY_FILE.exists():
+        try:
+            with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return []
+    return []
+
+def save_to_history(tool_name: str):
+    history = load_history()
+    if tool_name not in history:
+        history.append(tool_name)
+        with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+            json.dump(history, f, indent=2, ensure_ascii=False)
 
 def load_catalog():
     if DATABASE_FILE.exists():
@@ -58,21 +76,34 @@ def get_fallback_content(tool_name: str = None) -> dict:
 def generate_short_content(tool_hint: str = None) -> dict:
     """
     Generate viral Short script via Gemini API.
-    Falls back gracefully to curated database if API key is not yet configured.
+    Guarantees non-repeating tools by tracking history.
     """
+    history = load_history()
+    
     if not GEMINI_API_KEY:
         print("ℹ️ GEMINI_API_KEY not detected. Using curated high-converting AI database.")
-        return get_fallback_content(tool_hint)
+        content = get_fallback_content(tool_hint)
+        save_to_history(content["tool_name"])
+        return content
         
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}"
     
     catalog = load_catalog()
-    catalog_sample = [t["name"] for t in catalog[:10]]
+    catalog_remaining = [t["name"] for t in catalog if t["name"] not in history]
+    if not catalog_remaining:
+        catalog_remaining = [t["name"] for t in catalog]
+        
+    already_done_str = ", ".join(history[-25:]) if history else "None yet"
     
     prompt = f"""
     You are a viral YouTube Shorts and TikTok content creator specializing in AI Tools.
-    Create a high-retention 35-45 second video script in English reviewing an insane AI tool.
-    Recommended tool to feature: {tool_hint if tool_hint else random.choice(catalog_sample) if catalog_sample else 'Gamma App'}.
+    Create a high-retention 35-45 second video script in English reviewing an insane, mind-blowing AI tool.
+    Recommended tool candidate: {tool_hint if tool_hint else random.choice(catalog_remaining)}.
+
+    STRICT ANTI-REPEAT RULE:
+    DO NOT review any of these tools that were recently featured:
+    [{already_done_str}]
+    Pick a FRESH, trending, or highly useful AI tool across any category (e.g. video creation, audio/music, coding, 3D, writing, productivity, image gen, marketing, automation).
 
     Follow this viral formula:
     1. 0-3s HOOK: Scroll-stopping, high-curiosity or huge pain-point (e.g. 'Stop wasting 5 hours doing X...').
@@ -112,7 +143,6 @@ def generate_short_content(tool_hint: str = None) -> dict:
         if resp.status_code == 200:
             data = resp.json()
             raw_text = data["candidates"][0]["content"]["parts"][0]["text"].strip()
-            # Clean possible markdown wrapping
             if raw_text.startswith("```json"):
                 raw_text = raw_text[7:]
             if raw_text.startswith("```"):
@@ -120,11 +150,17 @@ def generate_short_content(tool_hint: str = None) -> dict:
             if raw_text.endswith("```"):
                 raw_text = raw_text[:-3]
             result = json.loads(raw_text.strip())
-            print(f"✨ Gemini successfully generated script for: {result.get('tool_name')}")
+            tool_name = result.get('tool_name', 'AI Tool')
+            save_to_history(tool_name)
+            print(f"✨ Gemini successfully generated script for: {tool_name}")
             return result
         else:
             print(f"⚠️ Gemini API returned status {resp.status_code}: {resp.text[:150]}")
-            return get_fallback_content(tool_hint)
+            content = get_fallback_content(tool_hint)
+            save_to_history(content["tool_name"])
+            return content
     except Exception as e:
         print(f"⚠️ Gemini API request failed: {e}. Falling back to curated catalog.")
-        return get_fallback_content(tool_hint)
+        content = get_fallback_content(tool_hint)
+        save_to_history(content["tool_name"])
+        return content
