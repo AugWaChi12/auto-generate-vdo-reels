@@ -163,11 +163,28 @@ def send_telegram_alert(metadata: dict, video_path: Path, yt_url: str = ""):
 
 def publish_video(content: dict, video_path: Path):
     metadata = format_video_metadata(content, video_path)
+    
+    # 1. Upload to YouTube Shorts
     yt_url = upload_to_youtube(video_path, metadata)
     if yt_url:
         metadata["youtube_url"] = yt_url
         with open(video_path.with_suffix(".json"), "w", encoding="utf-8") as f:
             json.dump(metadata, f, indent=2, ensure_ascii=False)
+            
+    # 2. Upload to Facebook Reels
+    fb_token = os.getenv("FB_PAGE_ACCESS_TOKEN", "")
+    fb_page_id = os.getenv("FB_PAGE_ID", "1294260180447455")
+    if fb_token:
+        try:
+            from src.facebook_uploader import upload_facebook_reel
+            fb_desc = f"{metadata.get('title', '')}\n\n{metadata.get('description', '')}"
+            fb_video_id = upload_facebook_reel(str(video_path), fb_desc, page_id=fb_page_id, access_token=fb_token)
+            if fb_video_id:
+                metadata["fb_video_id"] = fb_video_id
+                with open(video_path.with_suffix(".json"), "w", encoding="utf-8") as f:
+                    json.dump(metadata, f, indent=2, ensure_ascii=False)
+        except Exception as e:
+            print(f"⚠️ Facebook Reels upload error: {e}")
             
     send_telegram_alert(metadata, video_path, yt_url)
     return metadata

@@ -46,7 +46,14 @@
   2. `voice_engine.py`: เจนเสียงพากย์ฝรั่งคมชัดด้วย `edge-tts` (เสียง ChristopherNeural) พร้อมสร้างไฟล์ซับไตเติล `.ass`
   3. `visual_engine.py`: เจนภาพการ์ดไซเบอร์พังก์ระดับ 1080x1920 ด้วย Pillow
   4. `video_stitcher.py`: เรนเดอร์รวมภาพ เสียง ซับไตเติล และเพลง BGM ด้วย FFmpeg ในเวลาไม่ถึง 3 วินาที
-  5. `uploader.py`: ยิงคลิปขึ้น YouTube Shorts อัตโนมัติด้วย YouTube Data API v3 พร้อมใส่ Title, Description, Tags และ Hashtags ติดกระแส
+  5. `uploader.py`: ยิงคลิปขึ้น YouTube Shorts อัตโนมัติด้วย YouTube Data API v3 และยิงขึ้น **Facebook Reels** ผ่าน Meta Graph API พร้อมกัน 100%!
+
+---
+
+## 🔑 4. กุญแจและโทเค็นสำคัญ (Credentials)
+* **YouTube OAuth Token**: เก็บใน `token.json` และ GitHub Secret `YOUTUBE_TOKEN_JSON`
+* **Facebook Page ID**: `1294260180447455` (GitHub Secret `FB_PAGE_ID`)
+* **Facebook Permanent Page Token (ไม่มีวันหมดอายุ)**: GitHub Secret `FB_PAGE_ACCESS_TOKEN`
 
 ---
 
