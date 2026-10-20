@@ -9,6 +9,7 @@
 | ส่วนงาน | รายละเอียด / ลิงก์ | หมายเหตุ |
 | :--- | :--- | :--- |
 | **YouTube Channel** | [NextGen AI Hacks (@nextgen_ai_hacks)](https://www.youtube.com/@nextgen_ai_hacks) | ช่องหลัก ลงคลิป Shorts วันละ 2 เวลา |
+| **Facebook Page** | [NextGen AI Hacks](https://www.facebook.com/profile.php?id=61595294442999) | เพจหลัก ลงคลิป Reels เจาะกลุ่ม Facebook |
 | **Channel ID** | `UCzWhrdeQaus7WqTh3_NE6KQ` | ผูกกับ Google Cloud `NextGen-Shorts-Uploader` |
 | **Linktree (Bio Link)** | [linktr.ee/nextgen_ai_hacks](https://linktr.ee/nextgen_ai_hacks) | หน้ารวมปุ่มให้คนคลิกจากหน้าช่อง |
 | **PartnerStack (ตู้เซฟรับเงิน)** | [dash.partnerstack.com](https://dash.partnerstack.com) | เข้าสู่ระบบด้วยอีเมล: `supakornbelieve@gmail.com` |
