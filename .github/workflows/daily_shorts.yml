@@ -2,10 +2,10 @@ name: Daily AI Shorts Generator
 
 on:
   schedule:
-    # 04:00 UTC = 11:00 AM Bangkok Time
-    - cron: '0 4 * * *'
-    # 12:00 UTC = 19:00 PM Bangkok Time
-    - cron: '0 12 * * *'
+    # 04:15 UTC = 11:15 AM Bangkok Time (Off-peak minute to prevent GitHub dropping)
+    - cron: '15 4 * * *'
+    # 12:15 UTC = 19:15 PM Bangkok Time (Off-peak minute to prevent GitHub dropping)
+    - cron: '15 12 * * *'
   push:
     paths:
       - 'trigger_run.txt'
