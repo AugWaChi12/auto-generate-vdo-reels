@@ -95,7 +95,7 @@ def generate_scene_images(content: dict, temp_dir: Path) -> list[Path]:
     draw1 = ImageDraw.Draw(img1)
     
     # Top Warning Badge
-    draw_pill_badge(draw1, (240, 260, 840, 340), "⚠️ SECRET AI HACK ⚠️", font_badge, fill=(255, 30, 86))
+    draw_pill_badge(draw1, (240, 260, 840, 340), "[ SECRET AI HACK ]", font_badge, fill=(255, 30, 86))
     
     # Hook Card
     draw_rounded_card(draw1, (80, 420, 1000, 1100), fill=(16, 20, 36), outline=(255, 75, 110), radius=35, border_width=5)
@@ -121,12 +121,12 @@ def generate_scene_images(content: dict, temp_dir: Path) -> list[Path]:
     img2 = create_gradient_background(VIDEO_WIDTH, VIDEO_HEIGHT, (6, 15, 30), (14, 28, 55))
     draw2 = ImageDraw.Draw(img2)
     
-    draw_pill_badge(draw2, (260, 260, 820, 340), f"⚡ {category} ⚡", font_badge, fill=(0, 190, 255))
+    draw_pill_badge(draw2, (260, 260, 820, 340), f"[ {category} ]", font_badge, fill=(0, 190, 255))
     
     draw_rounded_card(draw2, (80, 400, 1000, 1120), fill=(14, 22, 42), outline=(0, 240, 255), radius=35, border_width=5)
     
-    # Rating
-    rating_text = f"⭐⭐⭐⭐⭐  {rating}"
+    # Rating (Clean universal text without emoji squares)
+    rating_text = f"OVERALL RATING: {rating}"
     bbox_r = draw2.textbbox((0, 0), rating_text, font=font_body_bold)
     draw2.text(((VIDEO_WIDTH - (bbox_r[2] - bbox_r[0])) / 2, 460), rating_text, fill=(255, 215, 0), font=font_body_bold)
     
@@ -154,7 +154,7 @@ def generate_scene_images(content: dict, temp_dir: Path) -> list[Path]:
     img3 = create_gradient_background(VIDEO_WIDTH, VIDEO_HEIGHT, (8, 12, 28), (20, 24, 48))
     draw3 = ImageDraw.Draw(img3)
     
-    draw_pill_badge(draw3, (280, 240, 800, 320), "🔥 WHY IT'S INSANE 🔥", font_badge, fill=(138, 43, 226))
+    draw_pill_badge(draw3, (280, 240, 800, 320), "[ KEY CAPABILITIES ]", font_badge, fill=(138, 43, 226))
     
     # Render 3 Feature Cards
     y_cards = [380, 620, 860]
@@ -178,7 +178,7 @@ def generate_scene_images(content: dict, temp_dir: Path) -> list[Path]:
     img4 = create_gradient_background(VIDEO_WIDTH, VIDEO_HEIGHT, (10, 8, 26), (32, 16, 52))
     draw4 = ImageDraw.Draw(img4)
     
-    draw_pill_badge(draw4, (260, 260, 820, 340), "✨ GET FREE ACCESS ✨", font_badge, fill=(0, 240, 255), text_color=(0, 0, 0))
+    draw_pill_badge(draw4, (260, 260, 820, 340), "[ GET FREE ACCESS ]", font_badge, fill=(0, 240, 255), text_color=(0, 0, 0))
     
     draw_rounded_card(draw4, (80, 420, 1000, 1100), fill=(20, 16, 42), outline=(255, 215, 0), radius=35, border_width=5)
     
