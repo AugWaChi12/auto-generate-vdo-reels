@@ -6,6 +6,9 @@ on:
     - cron: '0 4 * * *'
     # 12:00 UTC = 19:00 PM Bangkok Time
     - cron: '0 12 * * *'
+  push:
+    paths:
+      - 'trigger_run.txt'
   workflow_dispatch:
     inputs:
       tool:
